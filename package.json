@@ -1,5 +1,5 @@
 {
-  "name": "niceiddd",
+  "name": "goclassshow",
   "displayName": "meme",
   "description": "",
   "version": "0.0.1",
@@ -14,14 +14,14 @@
   "contributes": {
     "commands": [
       {
-        "command": "niceiddd.ikun",
+        "command": "goclassshow.ikun",
         "title": "ikun"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "niceiddd.ikun",
+          "command": "goclassshow.ikun",
           "when": "editorTextFocus",
           "group": "navigation"
         }
@@ -29,7 +29,7 @@
     },
     "keybindings": [
     {
-      "command": "niceiddd.ikun",
+      "command": "goclassshow.ikun",
       "key": "ctrl+shift+a",
       "mac": "cmd+shift+a",
       "when": "editorTextFocus"
