@@ -1,0 +1,1 @@
+import"../chunks/disclose-version.Bg9kRutz.js";import{i as p}from"../chunks/legacy.kGZIjXi4.js";import{p as r,a as m}from"../chunks/utils.TFVcIJ_k.js";import{o as t}from"../chunks/index-client.DtFaR75b.js";import{V as a}from"../chunks/View.BJFMMdty.js";import{i as n}from"../chunks/state.DEgKYUW7.js";function V(o,i){r(i,!1),t(n),p(),a(o,{}),m()}export{V as component};
