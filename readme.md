@@ -3,7 +3,7 @@
 
 
 
-例如：
-![Gin UML Example](example/gin.svg)
+<!-- 例如： -->
+<!-- ![Gin UML Example](https://github.com/peng456/go-calss-uml-vs/raw/HEAD/example/gin.svg) -->
 
 
