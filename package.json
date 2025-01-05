@@ -4,7 +4,7 @@
   "description": "",
   "publisher": "peng456",
   "author": "peng456",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/peng456/go-calss-uml-vs.git"
@@ -26,27 +26,49 @@
     "README.md"
 ],
   "contributes": {
+    "languages": [
+        {
+          "id": "go",
+          "extensions": [".go"],
+          "aliases": ["Go"]
+        }
+    ],
     "commands": [
       {
-        "command": "goclassshow.ikun",
-        "title": "ikun"
+        "command": "goclassshow.showgoclassdiagram",
+        "when": "editorTextFocus  && editorLangId == 'go'",
+        "title": "展示go类图"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "goclassshow.ikun",
-          "when": "editorTextFocus",
+          "command": "goclassshow.showgoclassdiagram",
+          "when": "editorTextFocus  && editorLangId == 'go'",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context":[
+          {
+          "command": "goclassshow.showgoclassdiagram",
+          "when": "editorTextFocus && editorLangId == 'go'",
+          "group": "navigation"
+        }
+      ],
+      "editor/title":[
+          {
+          "command": "goclassshow.showgoclassdiagram",
+          "when": "editorTextFocus && editorLangId == 'go'",
           "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "goclassshow.ikun",
-        "key": "ctrl+shift+a",
-        "mac": "cmd+shift+a",
-        "when": "editorTextFocus"
+        "command": "goclassshow.showgoclassdiagram",
+        "key": "shift+a+s",
+        "mac": "shift+a+s",
+        "when": "editorTextFocus && editorLangId == 'go'"
       }
     ]
   },

@@ -42,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "goclassshow" is now active!');
 
 
-	const ikunCommond = vscode.commands.registerCommand('goclassshow.ikun', () => {
+	const showClassDiagramCommond = vscode.commands.registerCommand('goclassshow.showgoclassdiagram', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 
@@ -115,7 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 	});
 
-	context.subscriptions.push(ikunCommond);
+	context.subscriptions.push(showClassDiagramCommond);
 
 }
 
