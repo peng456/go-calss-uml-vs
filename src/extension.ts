@@ -107,7 +107,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 			// 获取本地 mermaid.min.js 文件的 URI
 			const mermaidScriptPath = vscode.Uri.file(
-				path.join(context.extensionPath, 'src', 'mermaid.min.js')
+				path.join(context.extensionPath, 'media', 'mermaid.min.js')
 			);
 			// vscode.window.showInformationMessage(mermaidScriptPath.fsPath);
 
