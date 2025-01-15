@@ -163,7 +163,7 @@ async function callDeepSeek(system_prompt: string, data: Record<string, string>)
 			// 请求体参数
 			model: "deepseek-chat",
 			// prompt: "hello world",
-			max_tokens: 4096,
+			// max_tokens: 4096,
 			temperature: 0,
 			stream: false,
 			messages: [
@@ -227,7 +227,6 @@ export function activate(context: vscode.ExtensionContext) {
 		const workspaceFolders = vscode.workspace.workspaceFolders;
 		if (workspaceFolders && (workspaceFolders.length > 0)) {
 			const projectPath = workspaceFolders[0].uri.fsPath; // 获取第一个工作区的路径
-			// vscode.window.showInformationMessage(`当前工作区路径: ${projectPath}`);
 		} else {
 			vscode.window.showInformationMessage('没有打开工作区');
 		}
@@ -278,7 +277,7 @@ export function activate(context: vscode.ExtensionContext) {
 			);
 			// vscode.window.showInformationMessage(mermaidScriptPath.fsPath);
 
-			renderWithMermaid(stdout, mermaidScriptPath);
+			renderWithMermaid(stdout, mermaidScriptPath,context);
 		});
 	});
 
@@ -289,16 +288,67 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 
+	// 	let mermaidCode = `
+	// 	flowchart TD
+    // subgraph "Gin Framework"
+    //     CoreEngine["Core Engine"]:::core
+    //     Router["Router"]:::core
+    //     Context["Context"]:::core
+    //     Binding["Binding"]:::binding
+    //     Rendering["Rendering"]:::rendering
+    //     Middleware["Middleware"]:::middleware
+    //     Utilities["Utilities"]:::utilities
+    //     TestingExamples["Testing and Examples"]:::testing
+    //     DocumentationConfig["Documentation and Configuration"]:::docs
 
-		// let data11 = {
-		// 	"explanation": "nice",
-		// };
+    //     CoreEngine --> Router
+    //     Router --> Context
+    //     Context --> Middleware
+    //     Middleware --> Binding
+    //     Middleware --> Rendering
+    //     Context --> Binding
+    //     Context --> Rendering
+    //     Utilities --> CoreEngine
+    //     Utilities --> Router
+    //     Utilities --> Context
+    //     TestingExamples --> CoreEngine
+    //     TestingExamples --> Router
+    //     TestingExamples --> Context
+    //     DocumentationConfig --> CoreEngine
+    //     DocumentationConfig --> Router
+    //     DocumentationConfig --> Context
+    // end
 
-		// let res = callDeepSeek("You are a helpful assistant.", data11);
+    // classDef core fill:#96c8ff,stroke:#333,stroke-width:2px
+    // classDef binding fill:#ffcc99,stroke:#333,stroke-width:2px
+    // classDef rendering fill:#99ff99,stroke:#333,stroke-width:2px
+    // classDef middleware fill:#ff9999,stroke:#333,stroke-width:2px
+    // classDef utilities fill:#cccccc,stroke:#333,stroke-width:2px
+    // classDef testing fill:#ffccff,stroke:#333,stroke-width:2px
+    // classDef docs fill:#ccffff,stroke:#333,stroke-width:2px
 
-		// const resApi = await res;
+    // click CoreEngine "javascript:openFile('fileA.txt');"
 
-		// vscode.window.showInformationMessage(resApi);
+
+    // click Router "openFile://Users/peng/lab/gin/routergroup.go"
+    // click Context "openFile://Users/peng/lab/gin/context.go"
+    // click Binding "openFile://Users/peng/lab/gin/binding/"
+    // click Rendering "openFile://Users/peng/lab/gin/render/"
+    // click Middleware "openFile://Users/peng/lab/gin/middleware_test.go"
+    // click Utilities "openFile://Users/peng/lab/gin/utils.go"
+    // click TestingExamples "openFile://Users/peng/lab/gin/examples/"
+    // click DocumentationConfig "openFile://Users/peng/lab/gin/docs/"	"Open Documentation"
+	// 	`;
+
+
+	// 	// 获取本地 mermaid.min.js 文件的 URI
+	// 	const mermaidScriptPath = vscode.Uri.file(
+	// 		path.join(context.extensionPath, 'media', 'mermaid.min.js')
+	// 	);
+
+	// 	renderWithMermaid(mermaidCode, mermaidScriptPath, context);
+
+	// 	return;
 
 
 
@@ -347,13 +397,14 @@ export function activate(context: vscode.ExtensionContext) {
 				readmeContentLLM = readFile(readmeFilePath);
 
 			}
-			vscode.window.showInformationMessage(readmeContentLLM);
 
 			// 查询消耗token数
 
 			// Prepare system prompts with instructions if provided
 			let first_system_prompt = SYSTEM_FIRST_PROMPT;
 			let second_system_prompt = SYSTEM_SECOND_PROMPT;
+			// - This is a correct click event: \`click Example "openFile:app/example.js"\`
+
 			let third_system_prompt = SYSTEM_THIRD_PROMPT;
 			// 	if body.instructions:
 			// 		first_system_prompt = first_system_prompt + \
@@ -404,12 +455,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 			console.log('mermaidCode:', mermaidCode);
 
+			// 处理 click
+
 			// 获取本地 mermaid.min.js 文件的 URI
 			const mermaidScriptPath = vscode.Uri.file(
 				path.join(context.extensionPath, 'media', 'mermaid.min.js')
 			);
 
-			renderWithMermaid(mermaidCode, mermaidScriptPath);
+			renderWithMermaid(mermaidCode, mermaidScriptPath, context);
 		} catch (error) {
 			let errorMessage: string;
 			let errorStack: string | undefined;
@@ -517,33 +570,49 @@ function inExcludeFile(path: string): boolean {
 	return excludedPatterns.some(pattern => pattern.test(normalizedPath));
 
 }
-function renderWithMermaid(plantUmlText: string, mermaidScriptPath: vscode.Uri) {
+function renderWithMermaid(plantUmlText: string, mermaidScriptPath: vscode.Uri, context: vscode.ExtensionContext) {
 	// Create a new Webview panel or use an existing one.
 	const panel = vscode.window.createWebviewPanel(
 		'mermaidRenderer', // 标识符
 		'Renderedr', // 显示名称
 		vscode.ViewColumn.One, // 编辑器中的位置
 		{
-			enableScripts: true // 允许 Webview 执行脚本
+			enableScripts: true, // 允许 Webview 执行脚本
+			retainContextWhenHidden: true, // 保持 Webview 在隐藏时的状态
+
 		}
 	);
+
 	const mermaidScriptUri = panel.webview.asWebviewUri(mermaidScriptPath);
 
 	// Load mermaid.min.js into the webview and pass the PlantUml text.
 	var content = getWebviewContent(plantUmlText, mermaidScriptUri);
 
-	// vscode.window.showInformationMessage(content);
-
-	// cp.exec('sleep 1');
-	// console.log(content);
-
-
-	// vscode.window.showInformationMessage("panel.webview.htmlpanel.webview.htmlpanel.webview.html");
-	// vscode.window.showInformationMessage(panel.webview.html);
-
-	// cp.exec('sleep 1');
-
 	panel.webview.html = content;
+
+
+	// // 监听 Webview 消息
+	// panel.webview.onDidReceiveMessage(
+	// 	message => {
+	// 		switch (message.command) {
+	// 			case 'openFile':
+	// 				vscode.window.showInformationMessage(`${message.path}`);
+	// 				// vscode.commands.executeCommand('vscode.open', vscode.Uri.file(message.path));
+
+	// 				// const filePath = message.filePath;
+	// 				// const fileUri = vscode.Uri.file(filePath);
+	// 				// vscode.workspace.openTextDocument(fileUri).then(doc => {
+	// 				// 	vscode.window.showTextDocument(doc);
+	// 				// }, err => {
+	// 				// 	vscode.window.showErrorMessage(`Failed to open file: ${err.message}`);
+	// 				// });
+	// 				return;
+	// 		}
+
+	// 	},
+	// 	undefined,
+	// 	context.subscriptions
+	// );
 
 
 
@@ -559,37 +628,43 @@ function renderWithMermaid(plantUmlText: string, mermaidScriptPath: vscode.Uri) 
 }
 
 function getWebviewContent(plantUmlText: string, mermaidScriptUri: vscode.Uri): string {
-	// vscode.window.showInformationMessage("getWebviewContent");
-	// vscode.window.showInformationMessage(mermaidScriptUri.fsPath);
-	// plantUmlText = mermaidScriptUri.fsPath
-	// https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
-	// mermaidScriptUri
-	// plantUmlText = `
-	// classDiagram
-	//   class  BindUnmarshaler~interface~ {
-	//         ClassType struct
-	//         +String name %% dog's name
-	// 	}
-	//   class Binding {           
-	//   }
-	//   BindUnmarshaler <|.. Binding : realizes
-	// 	`;
 
-	// plantUmlText1 = `flowchart TD
-	// A[Start] --> B[Do something]
-	// B --> C{Is it OK?}
-	// C -->|Yes| D[Done]
-	// C -->|No| E[Retry]
-	// E --> B`
 	return `
       <!DOCTYPE html>
       <html lang="en">
       <head>
           <meta charset="UTF-8">
           <title>Mermaid Diagram</title>
-          <script src="${mermaidScriptUri}" onload="onMermaidLoad()"></script>
+          <script src="${mermaidScriptUri}" ></script>
           <script>
 		  	mermaid.initialize({startOnLoad:true}); 
+            console.log('startOnLoad');
+
+			window.addEventListener('click', function(event) {
+			console.log('click');
+			console.log(event);
+			const href = event.target.href;
+
+			const linkElement = event.target.closest('a');
+			if (linkElement && linkElement.href) {
+				const href = linkElement.href;
+				console.log('href:', linkElement);
+				console.log('href:', href);
+				if (href.startsWith('openFile://')) {
+					const filePath = href.substring('openFile://'.length);
+					console.log('filePath:', filePath);
+					window.acquireVsCodeApi().postMessage({
+						command: 'openFile',
+						filePath: filePath
+					});
+				} else if (href.startsWith('http://') || href.startsWith('https://')) {
+					// 如果是外部链接，可以在这里处理
+					window.open(href, '_blank');
+				}
+			}
+
+
+
 		  </script>
           
       </head>

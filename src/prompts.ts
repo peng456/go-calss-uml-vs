@@ -153,6 +153,7 @@ Ensure that your diagram adheres strictly to the given explanation, without addi
 Important notes on syntax:
 - In Mermaid.js syntax, we cannot include slashes without being inside quotes. For example: \`EX[/api/process]:::api\` is a syntax error but \`EX["/api/process"]:::api\` is valid.
 - In Mermaid.js syntax, you cannot apply a class style directly within a subgraph declaration. For example: \`subgraph "Frontend Layer":::frontend\` is a syntax error. However, you can apply them to nodes within the subgraph. For example: \`Example["Example Node"]:::frontend\` is valid, and \`class Example1,Example2 frontend\` is valid.
+- In Mermaid.js syntax, you cannot apply a legend name include space. For example: \`Core Components:::core\` is a syntax error. \`CoreComponents:::core\` is a syntax correct.
 `;
 
 // ^^^ note: ive generated a few diagrams now and claude still writes incorrect mermaid code sometimes. in the future, refer to those generated diagrams and add important instructions to the prompt above to avoid those mistakes. examples are best.
