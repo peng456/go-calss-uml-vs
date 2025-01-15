@@ -9,7 +9,6 @@
     "type": "git",
     "url": "https://github.com/peng456/go-calss-uml-vs.git"
   },
-  
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -24,20 +23,29 @@
     "out",
     "package.json",
     "README.md"
-],
+  ],
   "contributes": {
     "languages": [
-        {
-          "id": "go",
-          "extensions": [".go"],
-          "aliases": ["Go"]
-        }
+      {
+        "id": "go",
+        "extensions": [
+          ".go"
+        ],
+        "aliases": [
+          "Go"
+        ]
+      }
     ],
     "commands": [
       {
         "command": "goclassshow.showgoclassdiagram",
         "when": "editorTextFocus  && editorLangId == 'go'",
         "title": "展示go类图"
+      },
+      {
+        "command": "goclassshow.gitdiagram_generate",
+        "when": "editorTextFocus  && editorLangId == 'go'",
+        "title": "展示架构图"
       }
     ],
     "menus": {
@@ -48,15 +56,15 @@
           "group": "navigation"
         }
       ],
-      "explorer/context":[
-          {
+      "explorer/context": [
+        {
           "command": "goclassshow.showgoclassdiagram",
           "when": "editorTextFocus && editorLangId == 'go'",
           "group": "navigation"
         }
       ],
-      "editor/title":[
-          {
+      "editor/title": [
+        {
           "command": "goclassshow.showgoclassdiagram",
           "when": "editorTextFocus && editorLangId == 'go'",
           "group": "navigation"
